@@ -93,6 +93,10 @@ resource "aws_cloudwatch_event_rule" "this" {
   schedule_expression = lookup(each.value, "schedule_expression", null)
   role_arn            = lookup(each.value, "role_arn", false) ? aws_iam_role.eventbridge[0].arn : null
 
+  lifecycle {
+    ignore_changes = try(each.value.lifecycle.ignore_changes, null)
+  }
+
   tags = merge(var.tags, {
     Name = each.value.Name
   })
